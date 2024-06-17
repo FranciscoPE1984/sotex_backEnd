@@ -1,0 +1,41 @@
+import mysql.connector
+
+def deletar_membro(membro_id):
+    conexao = None
+    try:
+        # Conectando ao banco de dados
+        conexao = mysql.connector.connect(
+            host="localhost",
+            user="root",       # Substitua pelo seu usuário do MySQL
+            password="fnlj1984",     # Substitua pela sua senha do MySQL
+            database="sof"            # Nome do banco de dados
+        )
+        
+        cursor = conexao.cursor()
+        
+        # Comando SQL para deletar o membro
+        sql = "DELETE FROM membros WHERE membro_id = %s"
+        valores = (membro_id,)
+        
+        cursor.execute(sql, valores)
+        
+        # Confirmando a deleção dos dados
+        conexao.commit()
+        
+        print(cursor.rowcount, "registro(s) deletado(s) com sucesso.")
+        
+    except mysql.connector.Error as erro:
+        print("Erro ao deletar dados: {}".format(erro))
+        
+    finally:
+        # Fechando a conexão com o banco de dados
+        if conexao is not None and conexao.is_connected():
+            cursor.close()
+            conexao.close()
+            print("Conexão ao MySQL foi encerrada.")
+
+# Recebendo o ID do membro para deletar
+membro_id_para_deletar = input("Digite o ID do membro para deletar: ")
+
+# Chamando a função para deletar o membro
+deletar_membro(membro_id_para_deletar)
